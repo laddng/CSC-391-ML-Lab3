@@ -18,6 +18,7 @@ class NeuralNetwork:
 		print("[NeuralNetwork]: New neural network object created.");
 
 	def run(self):
+		print("[NeuralNetwork]: Starting up neural network");
 		self.buildDataset();
 		self.buildNetwork();
 		self.addData([0,0], [0]);
@@ -53,6 +54,7 @@ class NeuralNetwork:
 
 	def testData(self):
 		print('[testData]: MSE:', self.backprop.testOnData(self.dataset));
+		return True;
 
 	def trainData(self):
 		start = timeit.default_timer();
@@ -62,6 +64,7 @@ class NeuralNetwork:
 		return True;
 
 	def graphResults(self):
-		plt.figure(self.num_hidden_layers+" hidden layers");
-		plt.tight_layout();
+		plt.figure(str(self.num_hidden_layers)+" hidden layers");
 		plt.show();
+		return True;
+
