@@ -1,4 +1,3 @@
-from classes.HiddenLayer import *;
 from pybrain.datasets.supervised import SupervisedDataSet;
 from pybrain.tools.shortcuts import buildNetwork;
 from pybrain.supervised.trainers.backprop import BackpropTrainer;
@@ -20,16 +19,28 @@ class NeuralNetwork:
 		self.network = None;
 		self.backprop = None;
 		self.epochs = 10;
+		self.training_time = 0;
 		logger.info("New neural network object created.");
 
-	def run(self):
-		logger.info("Starting up neural network");
+	def run(self, operator):
+		logger.info("Starting up neural network for %s.", operator);
 		self.buildDataset();
 		self.buildNetwork();
-		self.addData([0,0], [0]);
-		self.addData([0,1], [0]);
-		self.addData([1,0], [0]);
-		self.addData([1,1], [1]);
+
+		# XOR data
+		if operator is "XOR":
+			self.addData([0,0], [0]);
+			self.addData([0,1], [1]);
+			self.addData([1,0], [1]);
+			self.addData([1,1], [0]);
+
+		# NXOR data
+		if operator is "NXOR":
+			self.addData([0,0], [1]);
+			self.addData([0,1], [0]);
+			self.addData([1,0], [0]);
+			self.addData([1,1], [1]);
+
 		self.backProp();
 		self.testData();
 		self.trainData();
@@ -65,7 +76,8 @@ class NeuralNetwork:
 		start = timeit.default_timer();
 		self.backprop.trainOnDataset(self.dataset, self.epochs);
 		stop = timeit.default_timer();
-		logger.info("Training time: %s", str(stop - start));
+		self.training_time = stop - start;
+		logger.info("Training time: %s", str(self.training_time));
 		return True;
 
 	def graphResults(self):
