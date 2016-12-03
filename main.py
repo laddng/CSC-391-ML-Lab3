@@ -1,15 +1,23 @@
-from modules.data_utils import *;
 from classes.NeuralNetwork import *;
 
 def run():
-	""" Runs our neural network program """
-	data = importData("data/");
+	""" Run neural network """
 
-	# 2 hidden layer
-	results = NeuralNetwork(data, 2);
+	# 2 hidden layers
+	net = NeuralNetwork(2, 1, 4);
+	net.buildDataset();
+	net.buildNetwork();
+	net.addData([0,0], [0]);
+	net.addData([0,1], [0]);
+	net.addData([1,0], [0]);
+	net.addData([1,1], [1]);
+	net.backProp();
+	net.testData();
+	net.trainData();
+	net.testData();
 
 	# 200 hidden layers
-	results = NeuralNetwork(data, 200);
+	NeuralNetwork(2, 1, 200);
 
 	return True;
 
