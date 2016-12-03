@@ -5,25 +5,28 @@ from matplotlib import pyplot as plt;
 import timeit;
 import logging;
 from logging.config import fileConfig;
+import math;
 
 fileConfig('logging_config.ini');
 logger = logging.getLogger();
 
 class NeuralNetwork:
 	""" Neural network class """
-	def __init__(self, num_inputs, num_outputs, num_hidden_layers):
-		self.num_inputs = num_inputs;
-		self.num_outputs = num_outputs;
-		self.num_hidden_layers = num_hidden_layers;
-		self.dataset = None;
-		self.network = None;
-		self.backprop = None;
-		self.epochs = 10;
-		self.training_time = 0;
+	def __init__(self, num_inputs, num_outputs, num_hidden_layers):	### Neural Network Variables ###
+		self.num_inputs = num_inputs;				# Number of inputs
+		self.num_outputs = num_outputs;				# Number of outputs
+		self.num_hidden_layers = num_hidden_layers;		# Number of hidden layers
+		self.dataset = None;					# Dataset object
+		self.network = None;					# Network object
+		self.backprop = None;					# Backpropogation object
+		self.epochs = 0;					# Epochs
+		self.RMSE = 0;						# RMSE
+		self.training_time = 0;					# Calculated training time
 		logger.info("New neural network object created.");
 
-	def run(self, operator):
+	def run(self, operator, epochs):
 		logger.info("Starting up neural network for %s.", operator);
+		self.epochs = epochs;
 		self.buildDataset();
 		self.buildNetwork();
 
@@ -45,8 +48,7 @@ class NeuralNetwork:
 		self.testData();
 		self.trainData();
 		self.testData();
-		self.graphResults();
-		return True;
+		return ;
 
 	def buildDataset(self):
 		self.dataset = SupervisedDataSet(self.num_inputs, self.num_outputs);
@@ -69,7 +71,8 @@ class NeuralNetwork:
 		return True;
 
 	def testData(self):
-		logger.info('MSE: %s', str(self.backprop.testOnData(self.dataset)));
+		self.RMSE = math.sqrt(self.backprop.testOnData(self.dataset));
+		logger.info('RMSE: %s', str(self.RMSE));
 		return True;
 
 	def trainData(self):
@@ -78,10 +81,5 @@ class NeuralNetwork:
 		stop = timeit.default_timer();
 		self.training_time = stop - start;
 		logger.info("Training time: %s", str(self.training_time));
-		return True;
-
-	def graphResults(self):
-		plt.figure(str(self.num_hidden_layers)+" hidden layers");
-		plt.show();
 		return True;
 
