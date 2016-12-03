@@ -1,10 +1,9 @@
-import numpy as np;
-import timeit;
-from modules.graph_utils import *;
 from classes.HiddenLayer import *;
 from pybrain.datasets.supervised import SupervisedDataSet;
 from pybrain.tools.shortcuts import buildNetwork;
 from pybrain.supervised.trainers.backprop import BackpropTrainer;
+from matplotlib import pyplot as plt;
+import timeit;
 
 class NeuralNetwork:
 	""" Neural network class """
@@ -17,6 +16,20 @@ class NeuralNetwork:
 		self.backprop = None;
 		self.epochs = 10;
 		print("[NeuralNetwork]: New neural network object created.");
+
+	def run(self):
+		self.buildDataset();
+		self.buildNetwork();
+		self.addData([0,0], [0]);
+		self.addData([0,1], [0]);
+		self.addData([1,0], [0]);
+		self.addData([1,1], [1]);
+		self.backProp();
+		self.testData();
+		self.trainData();
+		self.testData();
+		self.graphResults();
+		return True;
 
 	def buildDataset(self):
 		self.dataset = SupervisedDataSet(self.num_inputs, self.num_outputs);
@@ -48,3 +61,7 @@ class NeuralNetwork:
 		print("[trainData]: Training time: "+str(stop - start));
 		return True;
 
+	def graphResults(self):
+		plt.figure(self.num_hidden_layers+" hidden layers");
+		plt.tight_layout();
+		plt.show();
